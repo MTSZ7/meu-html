@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ComboTools</title>
+    <style>
+        /* Estilo geral */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            flex-direction: column;
+            position: relative; /* Para permitir posicionamento absoluto dos botões */
+        }
+
+        h1 {
+            color: #bb86fc;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        h2 {
+            color: #bb86fc;
+            font-size: 1.8em;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 80%;
+            max-width: 600px;
+            height: 200px;
+            background-color: #1e1e1e;
+            border: 2px solid #bb86fc;
+            color: white;
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 10px;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #6200ea;
+            outline: none;
+        }
+
+        button {
+            background-color: #606060; /* Cor cinza */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            font-size: 1.2em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 200px; /* Tamanho fixo para todos os botões */
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #404040; /* Cor cinza mais escuro quando passar o mouse */
+        }
+
+        pre {
+            background-color: #1e1e1e;
+            border: 2px solid #bb86fc;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 80%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 1em;
+            text-align: left;
+            margin-top: 20px;
+            min-height: 80px;
+            animation: fadeIn 1s ease;
+            max-height: 400px;
+            overflow-y: auto; /* Adiciona rolagem caso o conteúdo seja muito grande */
+        }
+
+        /* Animação de fadeIn */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Botões no canto superior direito */
+        .button-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .button-container button {
+            margin: 5px 0;
+        }
+
+    </style>
+    <script>
+        function formatarContas() {
+            let contas = document.getElementById("inputContas").value.trim().split("\n");
+            let resultado = [];
+
+            contas.forEach(function(conta) {
+                // Extraímos apenas a parte antes do primeiro " | "
+                let partes = conta.split(" | ")[0];
+                resultado.push(`"${partes}"`);
+            });
+
+            document.getElementById("output").innerText = resultado.join(",\n");
+        }
+
+        function copiarOutput() {
+            const outputText = document.getElementById("output");
+            const range = document.createRange();
+            range.selectNode(outputText);
+            window.getSelection().removeAllRanges();  // Limpa as seleções anteriores
+            window.getSelection().addRange(range);
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();  // Limpa a seleção após copiar
+
+            alert("Conteúdo copiado para a área de transferência!");
+        }
+
+        function removerLinhasVazias() {
+            let contas = document.getElementById("inputContas").value.trim().split("\n");
+            contas = contas.filter(function(conta) {
+                return conta.trim() !== ""; // Remove as linhas vazias
+            });
+            document.getElementById("inputContas").value = contas.join("\n");
+            formatarContas(); // Atualiza o resultado
+        }
+
+        function removerEmailsDuplicados() {
+            let contas = document.getElementById("inputContas").value.trim().split("\n");
+            let uniqueContas = [];
+            let seen = new Set();
+
+            contas.forEach(function(conta) {
+                let emailSenha = conta.split(" | ")[0]; // Pega apenas o email:senha
+                if (!seen.has(emailSenha)) {
+                    seen.add(emailSenha);
+                    uniqueContas.push(conta);
+                }
+            });
+
+            document.getElementById("inputContas").value = uniqueContas.join("\n");
+            formatarContas(); // Atualiza o resultado
+        }
+    </script>
+</head>
+<body>
+    <h1>ComboTools</h1>
+    <p>Extrair email e senha de combolists</p>
+    <textarea id="inputContas" placeholder="Cole a lista de contas aqui..."></textarea><br>
+    <button onclick="formatarContas()">Extrair</button>
+    
+    <h2>Resultado:</h2>
+    <pre id="output"></pre>
+
+    <!-- Container para os botões -->
+    <div class="button-container">
+        <button id="copyButton" onclick="copiarOutput()">Copiar Resultado</button>
+        <button id="removeEmptyButton" onclick="removerLinhasVazias()">Remover Linhas Vazias</button>
+        <button id="removeDuplicatesButton" onclick="removerEmailsDuplicados()">Remover Duplicados</button>
+    </div>
+</body>
+</html>
