@@ -1,4 +1,4 @@
-# 🚀 Nome do Projeto
+# 🚀 Quem ta é os nerd's
 
 Uma breve descrição do que seu projeto faz e para que ele serve.
 
