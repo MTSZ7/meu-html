@@ -4,7 +4,7 @@ Uma breve descrição do que seu projeto faz e para que ele serve.
 
 ## 🧐 Sobre
 
-Este projeto é uma aplicação que `o meu projeto`. Ele foi criado para `de demostração`.
+É uma html-perfil `o meu projeto`. Ele foi criado para `demostração`.
 
 ## 📦 Instalação
 
